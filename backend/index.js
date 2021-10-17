@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from 'uuid';
+
 addEventListener("fetch", (event) => {
   event.respondWith(
     handleRequest(event.request).catch(
@@ -120,8 +122,8 @@ async function createPost(request) {
   if (typeof body.content === "string") {
     post.content = body.content
   } else {
-    post.content.caption = body.content.text;
-    post.content.imgBase64 = body.content.img;
+    post.caption = body.text;
+    post.content = body.content;
   }
 
   try {
