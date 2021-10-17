@@ -91,6 +91,7 @@ async function getPosts(request){
     var postList = await posts.list();
 
     var keys = postList.keys;
+
     var allposts = []
 
     for(let i = 0; i < postList.keys.length; ++i) {
@@ -98,7 +99,12 @@ async function getPosts(request){
       allposts.push(JSON.parse(entry));
     }
 
-    return new Response(JSON.stringify(allposts), {status : 200});
+    var res = {
+      total : keys.length,
+      posts: allposts
+    }
+
+    return new Response(JSON.stringify(res), {status : 200});
   }
   catch(e) {
     return new Response(JSON.stringify(e), {status : 500});
@@ -123,7 +129,13 @@ async function createPost(request) {
     post.content = body.content
   } else {
     post.caption = body.text;
-    post.content = body.content;
+    post.content = [];
+
+    for(var i = 0; i < body.content.length; ++i) {
+      var temp = body.content[i];
+      temp.uuid = uuidv4();
+      post.content.push(temp);
+    }
   }
 
   try {
